@@ -64,7 +64,7 @@ jobs:
       - name: 🧬 Calculate native fingerprint
         id: fingerprint
         run: |
-          HASH=$(npx @expo/fingerprint . --json | jq -r '.hash')
+          HASH=$(npx @expo/fingerprint . | jq -r '.hash')
           echo "hash=$HASH" >> $GITHUB_OUTPUT
         
       # HASH=$(npx @expo/fingerprint .)
