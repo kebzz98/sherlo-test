@@ -12,12 +12,26 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: 🔍 Validate SHERLO_TOKEN
+    - name: 🔍 Validate Sherlo & EAS configuration
       shell: bash
       env:
         SHERLO_TOKEN: ${{ inputs.sherlo-token }}
+        EXPO_TOKEN: ${{ inputs.expo-token }}
       run: |
+        set +e
+
+        HAS_ERRORS=0
+
+        echo ""
+        echo "🔍 Validating Sherlo & EAS setup..."
+        echo "────────────────────────────────────"
+
+        # ----------------------------------------------------------------------
+        # SHERLO_TOKEN
+        # ----------------------------------------------------------------------
         if [ -z "$SHERLO_TOKEN" ]; then
+          HAS_ERRORS=1
+          echo ""
           echo "❌ Missing SHERLO_TOKEN"
           echo ""
           echo "Sherlo requires a project token to authenticate and run tests"
@@ -31,16 +45,16 @@ runs:
           echo "   5. Name: SHERLO_TOKEN, Value: [paste your token]"
           echo ""
           echo "::error title=Missing SHERLO_TOKEN::SHERLO_TOKEN secret is not configured"
-          exit 1
+        else
+          echo "✅ SHERLO_TOKEN is configured"
         fi
-        echo "✅ SHERLO_TOKEN is configured"
 
-    - name: 🔍 Validate EXPO_TOKEN
-      shell: bash
-      env:
-        EXPO_TOKEN: ${{ inputs.expo-token }}
-      run: |
+        # ----------------------------------------------------------------------
+        # EXPO_TOKEN
+        # ----------------------------------------------------------------------
         if [ -z "$EXPO_TOKEN" ]; then
+          HAS_ERRORS=1
+          echo ""
           echo "❌ Missing EXPO_TOKEN"
           echo ""
           echo "EAS Build requires Expo authentication"
@@ -53,26 +67,41 @@ runs:
           echo "   5. Name: EXPO_TOKEN, Value: [paste your token]"
           echo ""
           echo "::error title=Missing EXPO_TOKEN::EXPO_TOKEN secret is not configured"
-          exit 1
+        else
+          echo "✅ EXPO_TOKEN is configured"
         fi
-        echo "✅ EXPO_TOKEN is configured"
 
-    - name: 🔍 Validate EAS project configuration
-      shell: bash
-      run: |
+        # ----------------------------------------------------------------------
+        # EAS project configuration (projectId)
+        # ----------------------------------------------------------------------
         if ! grep -q '"projectId"' app.json 2>/dev/null; then
+          HAS_ERRORS=1
+          echo ""
           echo "❌ EAS Project Not Configured"
           echo ""
           echo "EAS Build requires the project to be linked to Expo"
           echo ""
           echo "📝 How to fix:"
-          echo "   1. Login to Expo: \`npx eas-cli login\`"
-          echo "   2. Configure project: \`npx eas-cli build:configure\`"
+          echo "   1. Login to Expo: npx eas-cli login"
+          echo "   2. Configure project: npx eas-cli build:configure"
           echo "   3. Commit the updated app.json file"
           echo ""
           echo "ℹ️ More info: https://docs.expo.dev/build/setup/"
           echo ""
           echo "::error title=EAS Project Not Configured::Missing projectId in app.json"
+        else
+          echo "✅ EAS project is configured (projectId found)"
+        fi
+
+        # ----------------------------------------------------------------------
+        # FINAL RESULT
+        # ----------------------------------------------------------------------
+        echo ""
+        echo "────────────────────────────────────"
+
+        if [ "$HAS_ERRORS" -eq 1 ]; then
+          echo "❌ Validation failed - please fix the issues above"
           exit 1
         fi
-        echo "✅ EAS project is configured (projectId found)"
+
+        echo "✅ All checks passed"
