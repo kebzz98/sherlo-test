@@ -9,6 +9,12 @@
     },
     "ios": {
       "bundleIdentifier": "io.sherlo.standard.example"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "82b79464-3a53-4370-9980-e548c5681f6a"
+      }
+    },
+    "owner": "dawidkrajewski"
   }
 }
