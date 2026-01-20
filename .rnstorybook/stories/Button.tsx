@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
     lineHeight: 1,
   },
   primary: {
-    backgroundColor: '#1ea7fd',
+    // backgroundColor: '#1ea7fd',
+    backgroundColor: '#F00',
   },
   primaryText: {
     color: 'white',

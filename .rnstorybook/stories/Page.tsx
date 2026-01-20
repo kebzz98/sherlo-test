@@ -21,7 +21,7 @@ export const Page = () => {
           Pages in Storybook
         </Text>
         <Text style={styles.p}>
-          We recommend building UIs with a{' '}
+          ELO BYNIU! We recommend building UIs with a{' '}
           <Text
             style={[styles.a, { fontWeight: 'bold' }]}
             role="link"
