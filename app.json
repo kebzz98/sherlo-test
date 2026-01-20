@@ -15,9 +15,11 @@
         "projectId": "82b79464-3a53-4370-9980-e548c5681f6a"
       }
     },
-    "owner": "dawidkrajewski",
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/82b79464-3a53-4370-9980-e548c5681f6a"
     }
   }
 }
